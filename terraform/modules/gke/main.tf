@@ -7,6 +7,8 @@ resource "google_container_cluster" "primary" {
   initial_node_count       = var.gke_num_nodes
   network    = var.network_name
   subnetwork = var.subnetwork_name
+  monitoring_service = "monitoring.googleapis.com/kubernetes"
+  logging_service = "logging.googleapis.com/kubernetes"
 }
 
 # Separately Managed Node Pool
@@ -24,13 +26,29 @@ resource "google_container_node_pool" "primary_nodes" {
 
     labels = {
       env = var.cluster_name
+      csm = ""
     }
-
     preemptible  = true
-    machine_type = "n1-standard-1"
-    tags         = ["gke-node", "${var.cluster_name}-gke"]
+    machine_type = "e2-standard-2"
+    tags         = ["gke-node", "${var.cluster_name}-gke", "bank-of-anthos"]
     metadata = {
       disable-legacy-endpoints = "true"
     }
+  }
+}
+
+resource "null_resource" "fetch_cluster" {
+  depends_on = [google_container_node_pool.primary_nodes]
+
+  provisioner "local-exec" {
+    command = "gcloud container clusters get-credentials ${var.cluster_name}-gke"
+  }
+
+}
+
+resource "null_resource" "deploy_cluster" {
+  depends_on = [null_resource.fetch_cluster]
+  provisioner "local-exec" {
+    command = "./modules/gke/autodeploy.sh"
   }
 }
