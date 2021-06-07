@@ -2,14 +2,14 @@
 #####################################################################
 # Modules
 #####################################################################
-/*
+
 #Google Kubernetes Engine
 module "gke" {
   source   = "./modules/gke"
   network_name    = google_compute_network.chuby_vpc.id
   subnetwork_name = google_compute_subnetwork.chuby_subnetwork.id
 }
-*/
+
 
 /*
 #Google Compute Engine
@@ -18,7 +18,7 @@ module "elk" {
    network_name    = google_compute_network.chuby_vpc.id
    subnetwork_name = google_compute_subnetwork.chuby_subnetwork.id
 }
-*/
+
 
 #Google Compute Engine
 module "prometheus" {
@@ -26,7 +26,7 @@ module "prometheus" {
    network_name    = google_compute_network.chuby_vpc.id
    subnetwork_name = google_compute_subnetwork.chuby_subnetwork.id
  }
-
+*/
 #####################################################################
 # Resources
 #####################################################################
@@ -49,3 +49,4 @@ resource "google_compute_subnetwork" "chuby_subnetwork" {
   region        = "us-central1"
   network       = google_compute_network.chuby_vpc.name
 }
+
