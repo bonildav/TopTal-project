@@ -625,7 +625,7 @@ grafana:
   ##
   defaultDashboardsEnabled: true
 
-  adminPassword: $GRAFANA_PASSWD
+  adminPassword: GRAFANA
 
   ingress:
     ## If true, Grafana Ingress will be created

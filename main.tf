@@ -14,27 +14,22 @@ module "gke" {
 /*
 #Google Compute Engine
 module "elk" {
-  source          = "./modules/elk"
+   source          = "./modules/elk"
    network_name    = google_compute_network.chuby_vpc.id
    subnetwork_name = google_compute_subnetwork.chuby_subnetwork.id
 }
-
-
-#Google Compute Engine
-module "prometheus" {
-   source          = "./modules/prometheus"
-   network_name    = google_compute_network.chuby_vpc.id
-   subnetwork_name = google_compute_subnetwork.chuby_subnetwork.id
- }
 */
+
+#Bucket
+module "velero" {
+  depends_on = [module.gke]
+  source  = "./modules/velero"
+  bucket_name  = "toptal-bucket-velero"
+}
+
 #####################################################################
 # Resources
 #####################################################################
-#Repo
-#resource "google_sourcerepo_repository" "gceme" {
-#  name = "default"
-#  project = "${var.project}"
-#}
 
 #VPC
 resource "google_compute_network" "chuby_vpc" {
@@ -49,4 +44,23 @@ resource "google_compute_subnetwork" "chuby_subnetwork" {
   region        = "us-central1"
   network       = google_compute_network.chuby_vpc.name
 }
+/*
+#Firewall Rule
+resource "google_compute_firewall" "google_compute_network" {
+  depends_on = [google_compute_network.gke]
+  name    = "terraform-firewall"
+  network = google_compute_network.chuby_vpc.name
+  direction = INGRESS
 
+  allow {
+    protocol = "tcp"
+  }
+
+  allow {
+    protocol = "tcp"
+    ports    = ["80", "8080", "9090", "9093", "9100", "10250", "3000","32516", "22"]
+  }
+
+  source_ranges = ["10.10.10.0/24", "177.231.156.250"]
+}
+*/

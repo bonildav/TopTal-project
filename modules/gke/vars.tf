@@ -21,6 +21,11 @@ variable "network_name" {
 variable "subnetwork_name" {
 }
 
+variable "project_id" {
+  default = "learning-project-288414"
+}
+
+
 variable "gke_username" {
   default     = ""
   description = "gke username"

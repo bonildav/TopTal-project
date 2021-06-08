@@ -6,7 +6,7 @@
 
 #Variables
 ns=$(kubectl get ns | grep monitoring | awk '{print $1}')
-path_for_configfiles="/Users/david_bonilla/work/repos/yoiker-project/terraform/modules/gke"
+path_for_configfiles="/Users/david_bonilla/work/repos/yoiker-project/modules/gke"
 helm_installed=$(helm ls -n monitoring | grep prometheus | awk '{print $1}')
 helm_prometheus_pkg="prometheus-community/kube-prometheus-stack"
 

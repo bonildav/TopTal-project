@@ -9,6 +9,9 @@ resource "google_container_cluster" "primary" {
   subnetwork = var.subnetwork_name
   monitoring_service = "monitoring.googleapis.com/kubernetes"
   logging_service = "logging.googleapis.com/kubernetes"
+  workload_identity_config {
+  identity_namespace = "${var.project_id}.svc.id.goog"
+  }
 }
 
 # Separately Managed Node Pool
@@ -22,6 +25,7 @@ resource "google_container_node_pool" "primary_nodes" {
     oauth_scopes = [
       "https://www.googleapis.com/auth/logging.write",
       "https://www.googleapis.com/auth/monitoring",
+      "https://www.googleapis.com/auth/devstorage.full_control"
     ]
 
     labels = {
