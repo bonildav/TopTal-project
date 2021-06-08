@@ -6,10 +6,10 @@
 
 #Variables
 ns=$(kubectl get ns | grep monitoring | awk '{print $1}')
-path_for_configfiles="/Users/david_bonilla/work/repos/yoiker-project/modules/gke"
+path_for_configfiles="$HOME/work/repos/yoiker-project/modules/gke"
 helm_installed=$(helm ls -n monitoring | grep prometheus | awk '{print $1}')
 helm_prometheus_pkg="prometheus-community/kube-prometheus-stack"
-
+ACCESS_TOKEN=$(cat $HOME/work/repos/weebhooktoken)
 # Deploy anthos bank
 if [ $ns == "monitoring" ]; then
   echo "Name space monitoring already created..."
@@ -26,3 +26,8 @@ else
   kubectl apply -f $path_for_configfiles/grafana-dashboards
   exit 0
 fi
+
+#Trigger CI/CD
+echo "trigger ci/cd to implement app after k8s creation"
+echo "Execuring CI/CD..."
+curl -X POST -H "Authorization: token $ACCESS_TOKEN" https://api.github.com/repos/bonildav/bank-of-anthos/dispatches -d '{"event_type":"app-init"}'

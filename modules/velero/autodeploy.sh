@@ -15,5 +15,9 @@ velero install --provider gcp --plugins velero/velero-plugin-for-gcp:v1.2.0 --bu
 echo "Granting access..."
 gsutil iam ch serviceAccount:$SERVICE_ACCOUNT_EMAIL:objectAdmin gs://${BUCKET}
 #Creating schedule for velero
-echo "Creating schedule for Velero..."
+echo "Creating daily backup for Velero..."
 velero schedule create dailybackup --schedule "0 7 * * *"  --ttl 24h0m0s
+echo "Creating full backup"
+velero create backup fullbackup
+echo "Creating anthos bank backup..."
+velero create backup anthos-bank --include-namespaces prmaster
