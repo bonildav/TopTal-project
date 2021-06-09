@@ -1,16 +1,16 @@
 
 # GKE cluster
 resource "google_container_cluster" "primary" {
-  name     = "${var.cluster_name}-gke"
-  location = "${var.region}-c"
+  name                     = "${var.cluster_name}-gke"
+  location                 = "${var.region}-c"
   remove_default_node_pool = true
   initial_node_count       = var.gke_num_nodes
-  network    = var.network_name
-  subnetwork = var.subnetwork_name
-  monitoring_service = "monitoring.googleapis.com/kubernetes"
-  logging_service = "logging.googleapis.com/kubernetes"
+  network                  = var.network_name
+  subnetwork               = var.subnetwork_name
+  monitoring_service       = "monitoring.googleapis.com/kubernetes"
+  logging_service          = "logging.googleapis.com/kubernetes"
   workload_identity_config {
-  identity_namespace = "${var.project_id}.svc.id.goog"
+    identity_namespace = "${var.project_id}.svc.id.goog"
   }
 }
 
@@ -43,7 +43,6 @@ resource "google_container_node_pool" "primary_nodes" {
 
 resource "null_resource" "fetch_cluster" {
   depends_on = [google_container_node_pool.primary_nodes]
-
   provisioner "local-exec" {
     command = "gcloud container clusters get-credentials ${var.cluster_name}-gke"
   }

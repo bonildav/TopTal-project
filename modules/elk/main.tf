@@ -1,8 +1,7 @@
-
 resource "google_compute_instance" "instance" {
   name                      = "elk"
   machine_type              = "e2-micro"
-  zone                      = "us-central1-c"
+  zone                      = var.zone
   allow_stopping_for_update = true
 
   boot_disk {

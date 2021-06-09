@@ -5,7 +5,7 @@
 
 #Google Kubernetes Engine
 module "gke" {
-  source   = "./modules/gke"
+  source          = "./modules/gke"
   network_name    = google_compute_network.chuby_vpc.id
   subnetwork_name = google_compute_subnetwork.chuby_subnetwork.id
 }
@@ -22,9 +22,9 @@ module "elk" {
 
 #Bucket
 module "velero" {
-  depends_on = [module.gke]
-  source  = "./modules/velero"
-  bucket_name  = "toptal-bucket-velero"
+  depends_on  = [module.gke]
+  source      = "./modules/velero"
+  bucket_name = var.velero_bucket_name
 }
 
 #####################################################################
@@ -33,15 +33,15 @@ module "velero" {
 
 #VPC
 resource "google_compute_network" "chuby_vpc" {
-  name                    = "vpc-network"
+  name                    = var.vpc_name
   auto_create_subnetworks = false
 }
 
 #Subnet
 resource "google_compute_subnetwork" "chuby_subnetwork" {
-  name          = "terraform-subnetwork"
+  name          = var.subnetwork_name
   ip_cidr_range = "10.10.10.0/24"
-  region        = "us-central1"
+  region        = var.region
   network       = google_compute_network.chuby_vpc.name
 }
 /*
