@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: node-exporter-dashboards-toptal
+  name: node-exporter-toptal
   namespace: monitoring
   labels:
      grafana_dashboard: "2"

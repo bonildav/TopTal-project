@@ -1,12 +1,21 @@
+#Google Kubernetes Engine
+data "terraform_remote_state" "vpc" {
+backend = "gcs"
+config = {
+    bucket = "chuby-terraform-bucket"
+    prefix = "network/state"
+  }
+}
 
 # GKE cluster
 resource "google_container_cluster" "primary" {
   name                     = "${var.cluster_name}-gke"
-  location                 = "${var.region}-c"
+  location                 = "${var.region}"
+  project                 = var.project_id
   remove_default_node_pool = true
   initial_node_count       = var.gke_num_nodes
-  network                  = var.network_name
-  subnetwork               = var.subnetwork_name
+  network                  = data.terraform_remote_state.vpc.outputs.vpc_name
+  subnetwork               = data.terraform_remote_state.vpc.outputs.subnet_name
   monitoring_service       = "monitoring.googleapis.com/kubernetes"
   logging_service          = "logging.googleapis.com/kubernetes"
   workload_identity_config {
@@ -17,9 +26,10 @@ resource "google_container_cluster" "primary" {
 # Separately Managed Node Pool
 resource "google_container_node_pool" "primary_nodes" {
   name       = "${google_container_cluster.primary.name}-node-pool"
-  location   = "${var.region}-c"
+  location   = "${var.region}"
   cluster    = google_container_cluster.primary.name
   node_count = var.gke_num_nodes
+  project                 = var.project_id
 
   node_config {
     oauth_scopes = [
@@ -41,17 +51,9 @@ resource "google_container_node_pool" "primary_nodes" {
   }
 }
 
-resource "null_resource" "fetch_cluster" {
+resource "null_resource" "deploy_cluster" {
   depends_on = [google_container_node_pool.primary_nodes]
   provisioner "local-exec" {
-    command = "gcloud container clusters get-credentials ${var.cluster_name}-gke"
-  }
-
-}
-
-resource "null_resource" "deploy_cluster" {
-  depends_on = [null_resource.fetch_cluster]
-  provisioner "local-exec" {
-    command = "./modules/gke/autodeploy.sh"
+    command = "./autodeploy.sh"
   }
 }

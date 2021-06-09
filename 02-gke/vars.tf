@@ -22,16 +22,6 @@ variable "zone" {
   description = "Value for GKE username"
 }
 
-variable "network_name" {
-  type        = string
-  description = "Name of the VPC used in GCP"
-}
-
-variable "subnetwork_name" {
-  type        = string
-  description = "Name of the Subnetwork used in GCP"
-}
-
 variable "project_id" {
   type        = string
   default     = "learning-project-288414"

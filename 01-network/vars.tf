@@ -1,10 +1,3 @@
-variable "velero_bucket_name" {
-  type        = string
-  default     = "toptal-bucket-velero"
-  description = "Name of the Velero bucket in GCP"
-}
-
-
 variable "vpc_name" {
   type        = string
   default     = "vpc-network"
@@ -24,3 +17,8 @@ variable "region" {
   description = "Value of the GCP region"
 }
 
+variable "project_id" {
+  type        = string
+  default     = "learning-project-288414"
+  description = "Name of the project in GCP"
+}
