@@ -11,7 +11,7 @@ resource "google_compute_subnetwork" "chuby_subnetwork" {
   ip_cidr_range = "10.10.10.0/24"
   region        = var.region
   network       = google_compute_network.chuby_vpc.name
-  project                 = var.project_id
+  project       = var.project_id
 }
 
 #Firewall Rule
@@ -20,7 +20,7 @@ resource "google_compute_firewall" "google_compute_network" {
   name       = "terraform-firewall"
   network    = google_compute_network.chuby_vpc.name
   direction  = "INGRESS"
-  project                 = var.project_id
+  project    = var.project_id
 
   allow {
     protocol = "tcp"

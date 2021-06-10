@@ -17,7 +17,7 @@ resource "google_storage_bucket" "velero_backups" {
 }
 
 resource "time_sleep" "wait" {
-  depends_on = [google_storage_bucket.velero_backups]
+  depends_on      = [google_storage_bucket.velero_backups]
   create_duration = "2m"
 }
 

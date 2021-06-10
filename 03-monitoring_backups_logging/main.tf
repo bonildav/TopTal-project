@@ -1,6 +1,6 @@
 data "terraform_remote_state" "kubernetes" {
-backend = "gcs"
-config = {
+  backend = "gcs"
+  config = {
     bucket = "chuby-terraform-bucket"
     prefix = "gke/state"
   }
@@ -50,25 +50,25 @@ provider "kubernetes" {
 
 
 module "prometheus_service" {
-  source      = "../modules/prometheus"
-  ns_name     = "monitoring"
-  chart       = "kube-prometheus-stack"
+  source       = "../modules/prometheus"
+  ns_name      = "monitoring"
+  chart        = "kube-prometheus-stack"
   release_name = "prometheus"
   repository   = "https://prometheus-community.github.io/helm-charts"
 }
 
 module "loki_service" {
-  depends_on = [module.prometheus_service]
-  source      = "../modules/loki"
-  ns_name     = "loki"
-  chart       = "loki-stack"
+  depends_on   = [module.prometheus_service]
+  source       = "../modules/loki"
+  ns_name      = "loki"
+  chart        = "loki-stack"
   release_name = "loki"
   repository   = "https://grafana.github.io/helm-charts"
 }
 
 module "velero_service" {
-  depends_on = [module.loki_service]
-  source = "../modules/velero"
-  bucket_name = "toptal-bucket-velero"
+  depends_on   = [module.loki_service]
+  source       = "../modules/velero"
+  bucket_name  = "toptal-bucket-velero"
   cluster_name = "toptal"
 }

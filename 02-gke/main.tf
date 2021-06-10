@@ -1,7 +1,7 @@
 #Google Kubernetes Engine
 data "terraform_remote_state" "vpc" {
-backend = "gcs"
-config = {
+  backend = "gcs"
+  config = {
     bucket = "chuby-terraform-bucket"
     prefix = "network/state"
   }
@@ -10,8 +10,8 @@ config = {
 # GKE cluster
 resource "google_container_cluster" "primary" {
   name                     = "${var.cluster_name}-gke"
-  location                 = "${var.region}"
-  project                 = var.project_id
+  location                 = var.zone
+  project                  = var.project_id
   remove_default_node_pool = true
   initial_node_count       = var.gke_num_nodes
   network                  = data.terraform_remote_state.vpc.outputs.vpc_name
@@ -26,10 +26,10 @@ resource "google_container_cluster" "primary" {
 # Separately Managed Node Pool
 resource "google_container_node_pool" "primary_nodes" {
   name       = "${google_container_cluster.primary.name}-node-pool"
-  location   = "${var.region}"
+  location   = var.zone
   cluster    = google_container_cluster.primary.name
   node_count = var.gke_num_nodes
-  project                 = var.project_id
+  project    = var.project_id
 
   node_config {
     oauth_scopes = [
